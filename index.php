@@ -49,7 +49,9 @@ class GetSS
 
     function genNode($sslink, $is_SSR = false)
     {
-        str_replace($sslink, "ss://", "");
+
+        $sslink = str_replace("ss://", "", $sslink);
+
         $ss = explode("@", $sslink);
         $url = explode(":", $ss[1]);
         $encrypt = explode(":", $ss[0]);
