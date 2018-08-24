@@ -31,7 +31,7 @@ class GetSS
         }
         //文件不存在
         if (!file_exists($file)) {
-            return getFileContent($filename, true);
+            return $this->getFileContent($filename, true);
         }
     }
 
@@ -52,7 +52,7 @@ class GetSS
         str_replace($sslink, "ss://", "");
         $ss = explode("@", $sslink);
         $url = explode(":", $ss[1]);
-        $encrypt = explode(":", ss[0]);
+        $encrypt = explode(":", $ss[0]);
         $ip = $url[0];
         $port = $url[1];
         $method = $encrypt[0];
