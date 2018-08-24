@@ -32,8 +32,8 @@ foreach ($links as $link) {
         }
     }
     if ($is_ping) {
-        $node->name = $node->getRemark();
-        $node->url = $node->getServerIP();
+        $node->name = $node->getRemark() . "<->".$node->getServerIP();
+        $node->url = "http://" . $node->getServerIP() . "/";
         $node->download = $node->generateLink();
         array_push($nodes, $node);
         continue;
