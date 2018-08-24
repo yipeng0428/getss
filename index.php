@@ -1,5 +1,6 @@
 <?php
-
+ini_set('display_errors', true);
+error_reporting(E_ALL);
 spl_autoload_register(function ($classname) {
     require_once "getss/" . $classname . '.php';
 });
@@ -15,7 +16,7 @@ $links = $util->getSSLink();
 $text = "";
 $filter_array = array();
 $nodes = array();
-
+$is_ping = true;
 foreach ($links as $link) {
     $node = $util->generateSSNode($link, $is_SSR);
 
@@ -31,6 +32,9 @@ foreach ($links as $link) {
         }
     }
     if ($is_ping) {
+        $node->name = $node->getRemark();
+        $node->url = $node->getServerIP();
+        $node->download = $node->generateLink();
         array_push($nodes, $node);
         continue;
     }

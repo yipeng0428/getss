@@ -73,7 +73,7 @@ class SSR_Node extends SS_Node
             "/?group=" .
             Util::urlsafe_b64encode("free") .
             "&remarks=" .
-            Util:: urlsafe_b64encode($this->remark);
+            Util:: urlsafe_b64encode($this->remark . $this->getServerIP());
         return "ssr://" . Util::urlsafe_b64encode($code);
     }
 

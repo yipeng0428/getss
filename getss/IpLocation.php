@@ -1,6 +1,6 @@
 <?php
 
-class ipLocation
+class IpLocation
 {
     var $fp;
     var $firstip;  //第一条ip索引的偏移地址
@@ -10,22 +10,24 @@ class ipLocation
 //构造函数,初始化一些变量
 //$datfile 的值为纯真IP数据库的名子,可自行修改.
 //*
-    public function ipLocation($datfile = "ip.dat")
+
+
+    function get4b()
+    {
+        $str = unpack("V", fread($this->fp, 4));
+        return $str[1];
+    }
+
+    /**
+     * IpLocation constructor.
+     */
+    public function __construct($datfile = "ip.dat")
     {
         $this->fp = fopen($datfile, 'rb');   //二制方式打开
         $this->firstip = $this->get4b(); //第一条ip索引的绝对偏移地址
         $this->lastip = $this->get4b();  //最后一条ip索引的绝对偏移地址
         $this->totalip = ($this->lastip - $this->firstip) / 7; //ip总数 索引区是定长的7个字节,在此要除以7,
         register_shutdown_function(array($this, "closefp"));  //为了兼容php5以下版本,本类没有用析构函数,自动关闭ip库.
-    }
-//*
-//关闭ip库
-//*
-
-    function get4b()
-    {
-        $str = unpack("V", fread($this->fp, 4));
-        return $str[1];
     }
 //*
 //读取4个字节并将解压成long的长模式

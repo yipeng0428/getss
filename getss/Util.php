@@ -9,7 +9,7 @@ class Util
 
     public function __construct()
     {
-        $this->ipUtil = new ipLocation();
+        $this->ipUtil = new IpLocation();
     }
 
     static function urlsafe_b64decode($string)
@@ -79,7 +79,7 @@ class Util
         $port = $url[1];
         $method = $encrypt[0];
         $pwd = $encrypt[1];
-        $remark = iconv('GB2312', 'UTF-8', $this->ipUtil->getaddress($ip)['area1'] . $this->ipUtil->getaddress($ip)['area2']);
+        $remark = iconv('GB2312', 'UTF-8', $this->ipUtil->getaddress($ip)['area1']);
         return $is_SSR ? new SSR_Node($ip, $port, $method, $pwd, $remark) : new SS_Node($ip, $port, $method, $pwd, $remark);
     }
 
