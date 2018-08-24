@@ -16,7 +16,6 @@ $links = $util->getSSLink();
 $text = "";
 $filter_array = array();
 $nodes = array();
-$is_ping = true;
 foreach ($links as $link) {
     $node = $util->generateSSNode($link, $is_SSR);
 
@@ -32,9 +31,9 @@ foreach ($links as $link) {
         }
     }
     if ($is_ping) {
-        $node->name = $node->getRemark() . "<->".$node->getServerIP();
+        $node->name = $node->getRemark()."-->".$node->getServerIP();
         $node->url = "http://" . $node->getServerIP() . "/";
-        $node->download = $node->generateLink();
+        $node->download = $node->generateLink()."-->".$node->getServerIP();
         array_push($nodes, $node);
         continue;
     }

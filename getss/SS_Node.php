@@ -15,7 +15,6 @@ class SS_Node implements NodeInterface
         $this->method = $method;
         $this->password = $password;
         $this->remark = $remark;
-
     }
 
     /**
@@ -111,7 +110,7 @@ class SS_Node implements NodeInterface
 
         $base64Code = Util::urlsafe_b64encode($code);
 
-        return "ss://$base64Code#" . $this->remark . $this->getServerIP();
+        return "ss://$base64Code#" . $this->remark;
     }
 
 }
