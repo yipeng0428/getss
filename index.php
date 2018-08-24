@@ -16,6 +16,11 @@ $links = $util->getSSLink();
 $text = "";
 $filter_array = array();
 $nodes = array();
+
+
+if ($update) {
+    $util::updateFile();
+}
 foreach ($links as $link) {
     $node = $util->generateSSNode($link, $is_SSR);
 
