@@ -31,7 +31,7 @@ class GetSS
         }
         //文件不存在
         if (!file_exists($file)) {
-            return getFileContent($filename, true);
+            return $this->getFileContent($filename, true);
         }
     }
 
@@ -49,16 +49,21 @@ class GetSS
 
     function genNode($sslink, $is_SSR = false)
     {
-        str_replace($sslink, "ss://", "");
+
+        $sslink = str_replace("ss://", "", $sslink);
+
         $ss = explode("@", $sslink);
         $url = explode(":", $ss[1]);
-        $encrypt = explode(":", ss[0]);
+        $encrypt = explode(":", $ss[0]);
         $ip = $url[0];
         $port = $url[1];
         $method = $encrypt[0];
         $pwd = $encrypt[1];
 
         if (isset($_GET['port'])) {
+            if (isset($_GET['oport'])) {
+                if ($port == $_GET['oport']) $port = $_GET['port'];
+            }
             if ($port != $_GET['port']) {
                 return false;
             }
