@@ -31,9 +31,9 @@ foreach ($links as $link) {
         }
     }
     if ($is_ping) {
-        $node->name = $node->getRemark()."-->".$node->getServerIP();
+        $node->name = $node->getRemark() . "-->" . $node->getServerIP();
         $node->url = "http://" . $node->getServerIP() . "/";
-        $node->download = $node->generateLink()."-->".$node->getServerIP();
+        $node->download = $node->generateLink() . "-->" . $node->getServerIP();
         array_push($nodes, $node);
         continue;
     }
@@ -48,7 +48,16 @@ foreach ($links as $link) {
 
 if ($is_ping) {
     header('Content-Type: text/javascript; charset=utf-8');
-    echo "data={Free:" . json_encode($nodes, JSON_UNESCAPED_UNICODE) . "};";
+    $remark_array = array();
+
+    foreach ($nodes as $node) {
+        $key = $node->getRemark();
+        if (!array_key_exists($key, $remark_array)) {
+            $remark_array[$key] = array();
+        }
+        array_push($remark_array[$key], $node);
+    }
+    echo "data=" . json_encode($remark_array, JSON_UNESCAPED_UNICODE) . ";";
     return;
 }
 

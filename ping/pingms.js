@@ -48,17 +48,16 @@ let timeOutID = null; // Used for "clearTimeout"
 //
 //
 // "onclick" event of names
-function nameOnClick()
-{
-    if((!allDone)&&(document.querySelector('.message')==null)) {
+function nameOnClick() {
+    if ((!allDone) && (document.querySelector('.message') == null)) {
         let message = document.createElement("div");
         message.className = "message";
-        message.innerHTML = "During download, ping might not be precise.<br><br><br>"+
-                            "<div style='inline-block;text-align:center;'>"+
-                            "<a href='javascript:void(0);' onclick='location.reload();void(0);'>Reload</a>"+
-                            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
-                            "<a href='javascript:void(0);' onclick='this.parentElement.parentElement.remove();void(0);'>Close</a>"+
-                            "</div>";
+        message.innerHTML = "During download, ping might not be precise.<br><br><br>" +
+            "<div style='inline-block;text-align:center;'>" +
+            "<a href='javascript:void(0);' onclick='location.reload();void(0);'>Reload</a>" +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+            "<a href='javascript:void(0);' onclick='this.parentElement.parentElement.remove();void(0);'>Close</a>" +
+            "</div>";
         document.body.appendChild(message);
     }
     //
@@ -66,6 +65,7 @@ function nameOnClick()
     let downloadURL = this.getAttribute("download");
     window.open(downloadURL, "_blank");
 }
+
 //
 //
 // Prepare to run tests
@@ -74,12 +74,14 @@ function prepare() {
     // The Document method querySelector() returns the first Element
     // within the document that matches the specified selector
     resultArea.appendChild(img);
+
     // *****
     function simpleElement(tag, text) {
         const el = document.createElement(tag);
         el.textContent = text;
         return el;
     }
+
     // *****
     Object.entries(data).forEach(function (pair) {
         // Object.entries...
@@ -107,18 +109,18 @@ function prepare() {
         // Total number of target servers of this cloud service.
         //
         array.forEach(function (item, i) {
-        // The following code logs a line for each element in an array:
-        // function logArrayElements(element, index, array) {
-        //     console.log('a[' + index + '] = ' + element);
-        // }
-        //
+            // The following code logs a line for each element in an array:
+            // function logArrayElements(element, index, array) {
+            //     console.log('a[' + index + '] = ' + element);
+            // }
+            //
             const bodyline = document.createElement("div");
             let result, name, tip, bar;
             bodyline.appendChild(result = simpleElement("span", "..."));
             result.className = "result";
             bodyline.appendChild(name = simpleElement("span", item.name));
             name.className = "name";
-            name.appendChild(tip = simpleElement("span", "Test Download"));
+            name.appendChild(tip = simpleElement("span", "Click to connect"));
             tip.className = "tip";
             bodyline.appendChild(bar = simpleElement("div", ""));
             bar.className = "bar";
@@ -132,13 +134,13 @@ function prepare() {
                 bar: bar        // The bar showing time(length and color)
             });
             bodyline.style.setProperty("--index", i);
-            if(item.download==void(0)) {
+            if (item.download == void(0)) {
                 tip.textContent = "No Download";
             }
             else {
                 name.setAttribute("download", item.download);
-                name.style.cursor="pointer";
-                name.onclick=nameOnClick;
+                name.style.cursor = "pointer";
+                name.onclick = nameOnClick;
             }
             // Index of this target server
             //
@@ -151,17 +153,18 @@ function prepare() {
         //
     })
 }
+
 //
 //
 // Abort test if it costs too much time
 // (How to test: disable "img.src = src + Math.random()", and it will always cost too much time)
-function timeOut()
-{
+function timeOut() {
     let callback = img.onerror;
     img.onerror = null; // Reset IMG object
     img.src = ""; // Reset IMG object
     nextTick(callback);
 }
+
 //
 //
 // Load image and set callback
@@ -169,7 +172,7 @@ function loadImg(src, callback) {
     try {
         clearTimeout(timeOutID);
     }
-    catch(err) {
+    catch (err) {
         ;
     }
     // Before loading, always cancel timeOut.
@@ -183,22 +186,22 @@ function loadImg(src, callback) {
     timeOutID = setTimeout(timeOut, 6000);
     // Max time is 6 seconds.
 }
+
 //
 //
 // Do a test
-function handleOneTest()
-{
+function handleOneTest() {
     // Get min of HTTP pings
     // (skip the first HTTP ping - it's just caching DNS)
-    if(task.count>1) {
+    if (task.count > 1) {
         const now = new Date().getTime();
         const delay = now - startTime;
-        if(delay<task.min) {
-            task.min=delay;
+        if (delay < task.min) {
+            task.min = delay;
         }
     }
     // Five HTTP pings are done
-    if(task.count==5) {
+    if (task.count == 5) {
         // Update the max value of cloud provider
         if (task.min > maxDelay) {
             maxDelay = task.min;
@@ -221,11 +224,12 @@ function handleOneTest()
     startTime = new Date().getTime();
     loadImg(task.url, handleOneTest);
 }
+
 //
 //
 // Do a "SubTask"(a location of cloud provider)
 function handleSubTasks() {
-    currentSubResults.sort(function(a, b) {
+    currentSubResults.sort(function (a, b) {
         return a.delay - b.delay;
     });
     // Sort an array descending:
@@ -250,10 +254,11 @@ function handleSubTasks() {
     }
     task = currentSubTasks.shift();
     task.result.textContent = "1/5";
-    task.count=1;
+    task.count = 1;
     // First time to load image (for caching DNS)
     loadImg(task.url, handleOneTest);
 }
+
 //
 //
 // Do a "Task"(a cloud provider)
@@ -269,7 +274,7 @@ function handleTasks() {
         try {
             clearTimeout(timeOutID);
         }
-        catch(err) {
+        catch (err) {
             ;
         }
         return;
@@ -279,9 +284,10 @@ function handleTasks() {
     // The shift() method removes the first element
     // from an array and returns that removed element.
     //
-    maxDelay=0; // Reset the max delay of this cloud provider.
+    maxDelay = 0; // Reset the max delay of this cloud provider.
     nextTick(handleSubTasks);
 }
+
 //
 //
 // This function is called by "body onload".
@@ -289,6 +295,7 @@ function main() {
     prepare();
     nextTick(handleTasks);
 }
+
 //
 //
 //
