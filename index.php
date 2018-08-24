@@ -1,16 +1,11 @@
 <?php
-//获取文件内容
 
-include("getfile.php");
+include("ipUtil.php");
 
 class GetSS
 {
     var $ipl;
 
-    /**
-     * GetSS constructor.
-     * @param $ipLocation
-     */
     public function __construct()
     {
         $this->ipl = new ipLocation("qqwry.dat");
@@ -57,18 +52,20 @@ class GetSS
         str_replace($sslink, "ss://", "");
         $ss = explode("@", $sslink);
         $url = explode(":", $ss[1]);
+        $encrypt = explode(":", ss[0]);
         $ip = $url[0];
-
-
         $port = $url[1];
-        if ("8382" == $port) {
-            $port = "8387";
+        $method = $encrypt[0];
+        $pwd = $encrypt[1];
 
-            $remark = iconv('GB2312', 'UTF-8', $this->ipl->getaddress($ip)['area1'] . $this->ipl->getaddress($ip)['area2']);
-            $node = $is_SSR ? new SSR_Node($ip, $port,$remark) : new SS_Node($ip, $port);
-            return $node->genLink("#$remark");
+        if (isset($_GET['port'])) {
+            if ($port != $_GET['port']) {
+                return false;
+            }
         }
-        return false;
+        $remark = iconv('GB2312', 'UTF-8', $this->ipl->getaddress($ip)['area1'] . $this->ipl->getaddress($ip)['area2']);
+        $node = $is_SSR ? new SSR_Node($ip, $port, $method, $pwd, $remark) : new SS_Node($ip, $port, $method, $pwd);
+        return $node->genLink("#$remark");
 
     }
 }
@@ -119,6 +116,7 @@ class SSR_Node implements Inode
     private $protocol;//协议
     private $obfs;//混淆方式
     private $remark;//remark
+
     /**
      * SSR_Node constructor.
      * @param $host
@@ -128,7 +126,7 @@ class SSR_Node implements Inode
      * @param $protocol
      * @param $obfs
      */
-    public function __construct($host, $port, $remark = "", $method = "aes-256-cfb", $password = "Sin1234qwer", $protocol = "origin", $obfs = "plain")
+    public function __construct($host, $port, $method = "aes-256-cfb", $password = "Sin1234qwer", $remark = "", $protocol = "origin", $obfs = "plain")
     {
         $this->host = $host;
         $this->port = $port;
@@ -137,7 +135,7 @@ class SSR_Node implements Inode
         $this->protocol = $protocol;
         $this->obfs = $obfs;
         if ("" == $remark) {
-            $this->$remark=$host;
+            $this->$remark = $host;
         }
         $this->link = "$host:$port:$protocol:$method:$obfs:" . urlsafe_b64encode($password) . "/?group=" . urlsafe_b64encode("free") . "&remarks=" .
             urlsafe_b64encode($remark);
