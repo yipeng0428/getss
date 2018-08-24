@@ -61,6 +61,9 @@ class GetSS
         $pwd = $encrypt[1];
 
         if (isset($_GET['port'])) {
+            if (isset($_GET['oport'])) {
+                if ($port == $_GET['oport']) $port = $_GET['port'];
+            }
             if ($port != $_GET['port']) {
                 return false;
             }
